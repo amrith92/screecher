@@ -13,3 +13,9 @@ void NixAlarm::annoyingBeep()
     system(NixAlarm::soundCmd);
     std::this_thread::sleep_for(std::chrono::seconds(2));
 }
+
+void NixAlarm::beep()
+{
+    system(NixAlarm::beepCmd);
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+}

@@ -23,8 +23,13 @@ int main()
             aState.clear();
             detector.populateDeviceList(&aState);
 
-            if (aState.hidCount() != initialState.hidCount()) {
+            const int initHidCount = initialState.hidCount(), currentHidCount = aState.hidCount();
+
+            if (currentHidCount < initHidCount) {
                 cout << "USBALARM: Mouse or Keyboard removed!" << endl;
+                alarm.get()->beep();
+            } else if (currentHidCount > initHidCount) {
+                cout << "USBALARM: Mouse or Keyboard added!" << endl;
                 alarm.get()->beep();
             }
 
