@@ -33,6 +33,8 @@ void Detector::populateDeviceList(State *aState)
 
         if (LIBUSB_CLASS_MASS_STORAGE == description.bDeviceClass || LIBUSB_CLASS_PHYSICAL == description.bDeviceClass) {
             type = Device::DEVICE_MASS_STORAGE;
+        } else if (LIBUSB_CLASS_HID) {
+            type = Device::DEVICE_HID;
         }
 
         /*{
