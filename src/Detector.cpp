@@ -1,11 +1,12 @@
 #include "Detector.hpp"
+#include "State.hpp"
 #include <libusb.h>
+#include <string>
 
-bool Detector::isStorageDeviceConnected()
+void Detector::populateDeviceList(State *aState)
 {
     libusb_device **devs;
     libusb_context *ctx = NULL;
-    bool ret = false;
 
     if (libusb_init(&ctx) < 0) {
         throw "LIBUSB init error.";
@@ -19,16 +20,52 @@ bool Detector::isStorageDeviceConnected()
         throw "Unable to open devices.";
     }
 
+    IdType id;
+    Device::Type type;
+    unsigned char buffer[30];
+
     libusb_device_descriptor description;
-    for (ssize_t i = 0; i < count && !ret; ++i) {
+    for (ssize_t i = 0; i < count; ++i) {
         if (libusb_get_device_descriptor(devs[i], &description) < 0)
         {
             throw "LIBUSB error in device. Could not get description.";
         }
 
         if (LIBUSB_CLASS_MASS_STORAGE == description.bDeviceClass || LIBUSB_CLASS_PHYSICAL == description.bDeviceClass) {
-            ret = true;
-            break;
+            type = Device::DEVICE_MASS_STORAGE;
+        }
+
+        /*{
+            libusb_device_handle *handle;
+
+            if (0 != libusb_open(devs[i], &handle)) {
+                throw "LIBUSB error in device. Could not open.";
+            }
+
+            int size = 0;
+
+            if ((size = libusb_get_string_descriptor_ascii(handle, description.iProduct, buffer, 30)) > 0) {
+                std::string str;
+
+                for (int _ = 0; _ < size; ++_) {
+                    str += (char) buffer[_];
+                }
+
+                if (str == "Android") {
+                    type = Device::DEVICE_SMARTPHONE;
+                }
+            }
+
+            libusb_close(handle);
+        }*/
+
+        id.vendorId = description.idVendor;
+        id.productId = description.idProduct;
+        id.release = description.bcdDevice;
+
+        if (id.vendorId == 0x04e8 && id.productId == 0x6860)
+        {
+            type = Device::DEVICE_SMARTPHONE;
         }
 
         libusb_config_descriptor *config;
@@ -44,17 +81,16 @@ bool Detector::isStorageDeviceConnected()
                 interfaceDescriptor = &interface->altsetting[k];
 
                 if (LIBUSB_CLASS_MASS_STORAGE == interfaceDescriptor->bInterfaceClass || LIBUSB_CLASS_PHYSICAL == interfaceDescriptor->bInterfaceClass) {
-                    ret = true;
-                    break;
+                    type = Device::DEVICE_MASS_STORAGE;
                 }
             }
         }
 
         libusb_free_config_descriptor(config);
+
+        aState->addDevice(Device(id, type));
     }
 
     libusb_free_device_list(devs, 1);
     libusb_exit(ctx);
-
-    return ret;
 }

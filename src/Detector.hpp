@@ -1,14 +1,12 @@
 #ifndef DETECTOR_HPP
 #define DETECTOR_HPP
 
+class State;
+
 class Detector
 {
 public:
-    virtual bool isStorageDeviceConnected();
-	
-    virtual bool isHidRemoved() = 0;
-	
-protected:
+    virtual void populateDeviceList(State *aState);
 };
 
 #endif /* DETECTOR_HPP */

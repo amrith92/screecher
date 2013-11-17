@@ -4,16 +4,17 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += src/main.cpp \
-    src/WindowsDetector.cpp \
-    src/LinuxDetector.cpp \
     src/Alarm.cpp \
-    src/Detector.cpp
+    src/Detector.cpp \
+    src/Device.cpp \
+    src/State.cpp \
+    src/NixAlarm.cpp
 
 HEADERS += \
-    src/Device.hpp \
     src/Detector.hpp \
     src/Alarm.hpp \
-    src/WindowsDetector.hpp \
-    src/LinuxDetector.hpp \
-    src/DetectorFactory.hpp
+    src/State.hpp \
+    src/Device.hpp \
+    src/NixAlarm.hpp \
+    src/AlarmRegistry.hpp
 

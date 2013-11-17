@@ -2,8 +2,9 @@
 #include <chrono>
 #include <thread>
 #include <auto_ptr.h>
-#include "Alarm.hpp"
-#include "DetectorFactory.hpp"
+#include "AlarmRegistry.hpp"
+#include "State.hpp"
+#include "Detector.hpp"
 
 using namespace std;
 
@@ -11,20 +12,35 @@ int main()
 {
     cout << "USBALARAM start ... OK" << endl;
 
-    Alarm alarm;
-    std::auto_ptr<Detector> detector(DetectorFactory::getDetector("linux"));
+    auto_ptr<Alarm> alarm(AlarmRegistry::getAlarm("linux"));
+    Detector detector;
+    State initialState, aState;
 
-    bool connected = false;
+    detector.populateDeviceList(&initialState);
+
     while (true) {
         try {
-            connected = detector.get()->isStorageDeviceConnected();
-            cout << "STORAGE CONNECTED: " << boolalpha << connected << endl;
+            aState.clear();
+            detector.populateDeviceList(&aState);
 
-            if (connected) {
-               alarm.annoyingBeep();
+            if (aState.hidCount() != initialState.hidCount()) {
+                cout << "USBALARM: Mouse or Keyboard removed!" << endl;
+                alarm.get()->beep();
+            }
+
+            initialState = aState;
+
+            if (initialState.hasMassStorageDevice()) {
+                cout << "USBALARM: Mass Storage device detected!" << endl;
+                alarm.get()->annoyingBeep();
+            }
+
+            if (initialState.hasSmartphoneDevice()) {
+                cout << "USBALARM: Mass Storage device detected!" << endl;
+                alarm.get()->annoyingBeep();
             }
         } catch (const char *e) {
-            std::cerr << e << endl;
+            cerr << e << endl;
             break;
         }
 
