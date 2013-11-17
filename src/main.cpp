@@ -33,14 +33,12 @@ int main()
                 alarm.get()->beep();
             }
 
-            initialState = aState;
-
-            if (initialState.hasMassStorageDevice()) {
+            if (aState.hasMassStorageDevice()) {
                 cout << "USBALARM: Mass Storage device detected!" << endl;
                 alarm.get()->annoyingBeep();
             }
 
-            if (initialState.hasSmartphoneDevice()) {
+            if (aState.hasSmartphoneDevice()) {
                 cout << "USBALARM: Mass Storage device detected!" << endl;
                 alarm.get()->annoyingBeep();
             }
