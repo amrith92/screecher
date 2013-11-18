@@ -2,7 +2,7 @@ CC	= g++
 CFLAGS	= -std=c++11 `pkg-config libusb-1.0 --cflags --libs`
 WCFLGS	= -std=c++11 -I %BOOST_INC% -I %LIBUSB_INC% -L %LIBUSB_LIB% -lusb
 RM	= rm -f
-WRM	= del /f
+WRM	= del
 
 SOURCES	= *.cpp
 OBJS	= *.o
