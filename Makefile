@@ -20,6 +20,6 @@ clean:
 	$(RM) $(OUT) src/$(OBJS)
 
 winclean:
-	$(WRM) $(WOUT) src/$(OBJS)
+	$(RM) $(WOUT) src/$(OBJS)
 
 .PHONY: all clean win winclean
