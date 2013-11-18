@@ -3,12 +3,12 @@
 #include <chrono>
 #include <stdlib.h>
 
-namespace thread = std;
-
 #ifdef WIN32
 #include <boost/thread.hpp>
 
 namespace thread = boost;
+#else
+namespace thread = std;
 #endif
 
 NixAlarm::NixAlarm()
