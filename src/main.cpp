@@ -7,6 +7,13 @@
 #include "Detector.hpp"
 
 using namespace std;
+namespace thread = std;
+
+#ifdef WIN32
+#include <boost/thread.hpp>
+
+namespace thread = boost;
+#endif
 
 int main()
 {
@@ -47,7 +54,7 @@ int main()
             break;
         }
 
-        this_thread::sleep_for(chrono::seconds(5));
+        thread::this_thread::sleep_for(chrono::seconds(5));
     }
 
     return 0;

@@ -3,6 +3,14 @@
 #include <chrono>
 #include <stdlib.h>
 
+namespace thread = std;
+
+#ifdef WIN32
+#include <boost/thread.hpp>
+
+namespace thread = boost;
+#endif
+
 NixAlarm::NixAlarm()
 {
 
@@ -11,11 +19,11 @@ NixAlarm::NixAlarm()
 void NixAlarm::annoyingBeep()
 {
     system(NixAlarm::soundCmd);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    thread::this_thread::sleep_for(std::chrono::seconds(2));
 }
 
 void NixAlarm::beep()
 {
     system(NixAlarm::beepCmd);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    thread::this_thread::sleep_for(std::chrono::seconds(2));
 }
