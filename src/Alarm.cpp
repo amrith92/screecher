@@ -1,13 +1,17 @@
 #include "Alarm.hpp"
-#include <thread>
-#include <chrono>
 #include <iostream>
 
 #ifdef WIN32
+#include <boost/chrono.hpp>
 #include <boost/thread.hpp>
+
+#define BOOST_THREAD_USE_LIB
 
 namespace thread = boost;
 #else
+#include <thread>
+#include <chrono>
+
 namespace thread = std;
 #endif
 
@@ -15,7 +19,7 @@ void Alarm::beep()
 {
     for (short i = 0; i < 50; ++i) {
         std::cerr << "\a";
-        thread::this_thread::sleep_for(std::chrono::milliseconds(500));
+        thread::this_thread::sleep_for(thread::chrono::milliseconds(500));
         std::cerr << "\a\a";
     }
 }
@@ -24,7 +28,7 @@ void Alarm::annoyingBeep()
 {
     for (short i = 0; i < 50; ++i) {
         std::cerr << "\a\a\a";
-        thread::this_thread::sleep_for(std::chrono::milliseconds(300));
+        thread::this_thread::sleep_for(thread::chrono::milliseconds(300));
         std::cerr << "\a";
     }
 }

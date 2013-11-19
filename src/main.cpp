@@ -1,6 +1,4 @@
 #include <iostream>
-#include <chrono>
-#include <thread>
 #include <auto_ptr.h>
 #include "AlarmRegistry.hpp"
 #include "State.hpp"
@@ -9,10 +7,16 @@
 using namespace std;
 
 #ifdef WIN32
+#include <boost/chrono.hpp>
 #include <boost/thread.hpp>
+
+#define BOOST_THREAD_USE_LIB
 
 namespace thread = boost;
 #else
+#include <thread>
+#include <chrono>
+
 namespace thread = std;
 #endif
 
@@ -55,7 +59,7 @@ int main()
             break;
         }
 
-        thread::this_thread::sleep_for(chrono::seconds(5));
+        thread::this_thread::sleep_for(thread::chrono::seconds(5));
     }
 
     return 0;
