@@ -8,8 +8,8 @@ using namespace std;
 
 #ifdef WIN32
 #define BOOST_THREAD_USE_LIB
-#include <boost/chrono.hpp>
-#include <boost/thread.hpp>
+#include <boost/chrono/chrono.hpp>
+#include <boost/thread/thread.hpp>
 
 namespace thread = boost;
 #else
