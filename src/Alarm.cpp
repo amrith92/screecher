@@ -2,10 +2,9 @@
 #include <iostream>
 
 #ifdef WIN32
+#define BOOST_THREAD_USE_LIB
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
-
-#define BOOST_THREAD_USE_LIB
 
 namespace thread = boost;
 #else

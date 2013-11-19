@@ -1,5 +1,5 @@
 #include <iostream>
-#include <auto_ptr.h>
+#include <memory>
 #include "AlarmRegistry.hpp"
 #include "State.hpp"
 #include "Detector.hpp"
@@ -7,10 +7,9 @@
 using namespace std;
 
 #ifdef WIN32
+#define BOOST_THREAD_USE_LIB
 #include <boost/chrono.hpp>
 #include <boost/thread.hpp>
-
-#define BOOST_THREAD_USE_LIB
 
 namespace thread = boost;
 #else
