@@ -1,20 +1,22 @@
 #ifndef ALARMREGISTRY_HPP
 #define ALARMREGISTRY_HPP
 
-#include <string>
-#include "Alarm.hpp"
-#include "NixAlarm.hpp"
+#ifndef WIN32
+# include "NixAlarm.hpp"
+#else
+# include "Alarm.hpp"
+#endif
 
 class AlarmRegistry
 {
 public:
-    static Alarm *getAlarm(std::string platform)
+    static Alarm *getAlarm()
     {
-        if (platform == "linux") {
-            return new NixAlarm;
-        }
-
-        return new Alarm;
+    	#ifdef WIN32
+    	return new Alarm;
+    	#else
+    	return new NixAlarm;
+    	#endif
     }
 };
 

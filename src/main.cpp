@@ -21,12 +21,12 @@ namespace thread = std;
 
 int main()
 {
-    cout << "USBALARAM start ... OK" << endl;
+    cout << "USBALARM start ... OK" << endl;
 
-    auto_ptr<Alarm> alarm(AlarmRegistry::getAlarm("linux"));
+    auto_ptr<Alarm> alarm(AlarmRegistry::getAlarm());
     Detector detector;
     State initialState, aState;
-
+    
     detector.populateDeviceList(&initialState);
 
     while (true) {

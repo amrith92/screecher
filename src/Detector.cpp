@@ -2,13 +2,14 @@
 #include "State.hpp"
 #include <libusb.h>
 #include <string>
+#include <iostream>
 
 void Detector::populateDeviceList(State *aState)
 {
     libusb_device **devs;
     libusb_context *ctx = NULL;
 
-    if (libusb_init(&ctx) < 0) {
+    if (libusb_init(&ctx) < 0) {    		
         throw "LIBUSB init error.";
     }
 
@@ -25,6 +26,7 @@ void Detector::populateDeviceList(State *aState)
     unsigned char buffer[30];
 
     libusb_device_descriptor description;
+    
     for (ssize_t i = 0; i < count; ++i) {
         if (libusb_get_device_descriptor(devs[i], &description) < 0)
         {
@@ -70,25 +72,25 @@ void Detector::populateDeviceList(State *aState)
             type = Device::DEVICE_SMARTPHONE;
         }
 
-        libusb_config_descriptor *config;
-        libusb_get_config_descriptor(devs[i], 0, &config);
+        libusb_config_descriptor *config; 
+        if (0 == libusb_get_active_config_descriptor(devs[i], &config)) {
+		      const libusb_interface *interface;
+		      const libusb_interface_descriptor *interfaceDescriptor;
 
-        const libusb_interface *interface;
-        const libusb_interface_descriptor *interfaceDescriptor;
+		      for (int j = 0; j < (int) config->bNumInterfaces; ++j) {
+		          interface = &config->interface[j];
 
-        for (int j = 0; j < (int) config->bNumInterfaces; ++j) {
-            interface = &config->interface[j];
+		          for (int k = 0; k < interface->num_altsetting; ++k) {
+		              interfaceDescriptor = &interface->altsetting[k];
 
-            for (int k = 0; k < interface->num_altsetting; ++k) {
-                interfaceDescriptor = &interface->altsetting[k];
+		              if (LIBUSB_CLASS_MASS_STORAGE == interfaceDescriptor->bInterfaceClass || LIBUSB_CLASS_PHYSICAL == interfaceDescriptor->bInterfaceClass) {
+		                  type = Device::DEVICE_MASS_STORAGE;
+		              }
+		          }
+		      }
 
-                if (LIBUSB_CLASS_MASS_STORAGE == interfaceDescriptor->bInterfaceClass || LIBUSB_CLASS_PHYSICAL == interfaceDescriptor->bInterfaceClass) {
-                    type = Device::DEVICE_MASS_STORAGE;
-                }
-            }
+		      libusb_free_config_descriptor(config);
         }
-
-        libusb_free_config_descriptor(config);
 
         aState->addDevice(Device(id, type));
     }
