@@ -1,4 +1,5 @@
 src/*.*~
 bin/*
+*.exe
 *.o
 *.user

@@ -1,6 +1,6 @@
 CC	= g++
 CFLAGS	= -std=c++11 `pkg-config libusb-1.0 --cflags --libs`
-WCFLGS	= -std=c++11 -I$(BOOST_INC) -L$(BOOST_LIB) -I$(LIBUSB_INC) -L$(LIBUSB_LIB) -lusb-1.0 -lboost_system-mgw48-mt-1_55 -lboost_date_time-mgw48-mt-1_55 -lboost_chrono-mgw48-mt-1_55 -lboost_thread-mgw48-mt-1_55
+WCFLGS	= -std=c++11 -lusb-1.0 -lboost_system -lboost_date_time -lboost_chrono -lboost_thread
 RM	= rm -f
 WRM	= del /F
 
@@ -14,7 +14,7 @@ all: clean
 	$(CC) src/$(SOURCES) -o $(OUT) $(CFLAGS)
 
 win:
-	$(CC) src/$(SOURCES) -o $(WOUT) $(WCFLGS)
+	$(CC) -DWIN32 src/$(SOURCES) -o $(WOUT) $(WCFLGS)
 
 clean:
 	$(RM) $(OUT) src/$(OBJS)
